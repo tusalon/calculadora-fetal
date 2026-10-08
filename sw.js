@@ -1,0 +1,5 @@
+const C="fetal-v1",F=["./","index.html","manifest.json","icon-512.png"
+,"assets/calc.min.js","assets/default.css","assets/default.date.css","assets/fav-icon.ico","assets/formatgui.js","assets/icons-18-white.png","assets/jquery-1.10.2.min.js","assets/jquery.mobile-1.4.5.css","assets/jquery.mobile-1.4.5.js","assets/jquery.mobile.simpledialog.min.js","assets/jquery.mousewheel.min.js","assets/legacy.js","assets/logo_new.png","assets/picker.date.js","assets/picker.js","assets/prettify.css","assets/prettify.js","assets/style.css","assets/type01.jpg","assets/type02.jpg","assets/type03.jpg"];
+self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(F)))});
+self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(n=>n!==C).map(n=>caches.delete(n))))));
+self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request).then(n=>{const x=n.clone();caches.open(C).then(c=>c.put(e.request,x));return n})))});

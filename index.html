@@ -1,0 +1,1056 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-512.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Calc Fetal">
+    <meta name="theme-color" content="#f9f9f9">
+    <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>
+    <meta name="author" content="Fetal Medicine Barcelona">
+	<link href="assets/fav-icon.ico" rel="shortcut icon">
+    <title>Calculadora Fetal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        html {
+            background-color: #f9f9f9;
+        }
+
+        @media only screen and (min-width: 600px) {
+
+            .ui-page {
+                width: 600px !important;
+                margin: 0 auto !important;
+                position: relative !important;
+                border-right: 5px #666 outset !important;
+                border-left: 5px #666 outset !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="assets/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" type="text/css" href="assets/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="assets/default.css" />
+    <link rel="stylesheet" type="text/css" href="assets/default.date.css" id="theme_date" />
+    <link rel="stylesheet" type="text/css" href="assets/style.css" />
+
+
+    <script type="text/javascript" src="assets/jquery-1.10.2.min.js"></script>
+	<!-- <script type="text/javascript" src="assets/jquery-migrate-3.1.0.min.js"></script> -->
+    <script type="text/javascript" src="assets/jquery.mobile-1.4.5.js"></script>
+    <script type="text/javascript" src="assets/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="assets/jquery.mobile.simpledialog.min.js"></script>
+    <script type="text/javascript" src="assets/prettify.js"></script>
+    <script type="text/javascript" src="assets/picker.js"></script>
+    <script type="text/javascript" src="assets/picker.date.js"></script>
+    <script type="text/javascript" src="assets/legacy.js"></script>
+    <script type="text/javascript" src="assets/calc.min.js"></script>
+
+</head>
+
+<body>
+
+    <div data-role="page">
+        <div data-role="header">
+            <div data-role="navbar">
+                <div data-role="header" style="text-align:center">
+                    <img src="assets/logo_new.png" alt="Algo" height="40" style="margin-top: 2px; margin-left:4px;">
+                </div>
+                <ul>
+                    <li><a href="#gestationalContent" class="ui-btn-active ui-btn-persist">Gestational</a></li>
+                    <li><a href="#preeclampsiaContent">Preeclampsia 1T</a></li>
+                    <li><a href="#herniaContent">Hernia</a></li>
+                    <li><a href="#anemiaContent">Anemia</a></li>
+                    <li><a href="#dopplerContent">Doppler</a></li>
+                    <li><a href="#fgrvssgaContent">Fetal Growth</a></li>
+                    <li><a href="#twinsContent">Monochorionic Twins</a></li>
+                    <li><a href="#references">References</a></li>
+                </ul>
+            </div>
+        </div>
+        <center>
+            <div data-role="content" style="display: none;">
+                <div id="gestationalContent">
+                    <div data-role="collapsible">
+                        <h1>DATING BY LMP AND BIOMETRIES</h1>
+                        <div data-role="collapsible">
+                            <h2>LMP (Last Menstrual Period)</h2>
+                            <label for="furConfirmada">Confirmed LMP</label>
+                            <input name="furConfirmada" id="furConfirmada" placeholder="Confirmed LMP" type="text">
+                            <label for="EGporFUR">GA by LMP</label>
+                            <input type="text" name="EGporFUR" id="EGporFUR" placeholder="EG por FUR...">
+                            <label for="FPPporDUR">EDD by LMP</label>
+                            <input type="text" name="FPPporDUR" id="FPPporDUR" placeholder="FPP por DUR...">
+                        </div>
+                        <div data-role="collapsible">
+                            <h2>First TM <sup>1</sup> (CRL<=84mm)</h2>
+                            <div class="ui-field-contain">
+                                <label for="fechaEcografia">Date of ultrasound</label>
+                                <input name="fechaEcografia" id="fechaEcografia" type="text" data-role="datebox" data-options='{"mode":"calbox", "useNewStyle":true, "calUsePickers": true, "calNoHeader": true }' />
+                                <label for="longitudCraneoCaudal">Crown to Rump Length</label>
+                                <input type="text" name="longitudCraneoCaudal" id="longitudCraneoCaudal" placeholder="Longitud craneo caudal..." />
+                                <input type="button" onclick="CRL()" value="Calculate" />
+                                <label for="EGporLCC">GA by CRL</label>
+                                <input type="text" name="EGporLCC" id="EGporLCC" placeholder="EG por LCC..." />
+                                <label for="FURporLCC">LMP by CRL</label>
+                                <input type="text" name="FURporLCC" id="FURporLCC" placeholder="FUR por LCC..." />
+                                <label for="FPPporLCC">EDD by CRL</label>
+                                <input type="text" name="FPPporLCC" id="FPPporLCC" placeholder="FPP por LCC..." />
+                            </div>
+                        </div>
+                        <div data-role="collapsible">
+                            <h2>Second TM <sup>2</sup> (BDP<= 70mm)</h2>
+                            <label for="diametroBiparietal">Biparietal diameter</label>
+                            <input type="text" name="diametroBiparietal" id="diametroBiparietal" placeholder="DiÃ¡metro biparietal..." />
+                            <label for="fechaEcografiaParietal">Date of ultrasound</label>
+                            <input name="fechaEcografiaParietal" id="fechaEcografiaParietal" type="text" data-role="datebox" data-options='{"mode":"calbox", "useNewStyle":true, "calUsePickers": true, "calNoHeader": true }' />
+                            <input type="button" onclick="DBP()" value="Calculate" />
+                            <label for="EGporDBP">GA by BPD</label>
+                            <input type="text" name="EGporDBP" id="EGporDBP" placeholder="EG por DBP..." />
+                            <label for="FURporDBP">LMP by BPD</label>
+                            <input type="text" name="FURporDBP" id="FURporDBP" placeholder="FUR por DBP..." />
+                            <label for="FPPporDBP">FUR by BPD</label>
+                            <input type="text" name="FPPporDBP" id="FPPporDBP" placeholder="FPP por DBP..." />
+                        </div>
+                        <div data-role="collapsible">
+                            <h2>Third TM <sup>3</sup> (BPD>70mm)</h2>
+                            <label for="perimetroCraneal">Head diameter</label>
+                            <input type="text" name="perimetroCraneal" id="perimetroCraneal" placeholder="PerÃ­metro craneal..." />
+                            <label for="fechaEcografiaPerimetroCraneal">Date of ultrasound</label>
+                            <input name="fechaEcografiaPerimetroCraneal" id="fechaEcografiaPerimetroCraneal" type="text" data-role="datebox" data-options='{"mode":"calbox", "useNewStyle":true, "calUsePickers": true, "calNoHeader": true }' />
+                            <input type="button" onclick="DBP_third()" value="Calculate" />
+                            <label for="EGporPC">GA by HC</label>
+                            <input type="text" name="EGporPC" id="EGporPC" placeholder="EG por PC..." />
+                            <label for="FURporPC">LMP by HC</label>
+                            <input type="text" name="FURporPC" id="FURporPC" placeholder="FUR por PC..." />
+                            <label for="FPPporPC">FUR by HC</label>
+                            <input type="text" name="FPPporPC" id="FPPporPC" placeholder="FPP por PC..." />
+                        </div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h1>Estimate fetal weight</h1>
+                        <div data-role="collapsible">
+                            <h2>DBP, PC, PA, LF (Hadlock FL) </h2>
+                            <div class="ui-field-contain">
+                                <label for="DBPmm">DBP (mm):</label>
+                                <input type="text" name="DBPmm" id="DBPmm">
+                                <label for="PCmm">PC (mm):</label>
+                                <input type="text" name="PCmm" id="PCmm">
+                                <label for="PAmm">PA (mm):</label>
+                                <input type="text" name="PAmm" id="PAmm">
+                                <label for="LFmm">LF (mm):</label>
+                                <input type="text" name="LFmm" id="LFmm">
+                                <input type="button" onclick="pesoFetal1()" value="Calculate weight">
+                            </div>
+                        </div>
+                        <div data-role="collapsible">
+                            <h2>PA, LF (Hadlock FL) </h2>
+                            <div class="ui-field-contain">
+                                <label for="PAmm_hadlock">PA (mm):</label>
+                                <input type="text" name="PAmm_hadlock" id="PAmm_hadlock">
+                                <label for="LFmm_hadlock">LF (mm):</label>
+                                <input type="text" name="LFmm_hadlock" id="LFmm_hadlock">
+                                <input type="button" onclick="Hadlock()" value="Calculate weight">
+                            </div>
+                        </div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h1>Growth centile in II TM</h1>
+                        <fieldset data-role="controlgroup" name="sexo1" id="sexo1">
+                            <legend>Gender:</legend>
+                            <input type="radio" name="radio-choice" id="radio-choice-1" value="choice-1" checked="checked" />
+                            <label for="radio-choice-1">Female</label>
+                            <input type="radio" name="radio-choice" id="radio-choice-2" value="choice-2" />
+                            <label for="radio-choice-2">Male</label>
+                        </fieldset>
+                        <label for="DBP1erTm_mes">BDP first TM (mm):</label>
+                        <input type="text" name="DBP1erTm_mes" id="DBP1erTm_mes">
+                        <label for="EG1erTM_weeks">GA first TM: (Weeks)</label>
+                        <input type="text" name="EG1erTM_weeks" id="EG1erTM_weeks">
+                        <label for="EG1erTM_days">GA first TM: (Days)</label>
+                        <input type="text" name="EG1erTM_days" id="EG1erTM_days">
+                        <label for="DBP2TM_mes">DBP second TM (mm):</label>
+                        <input type="text" name="DBP2TM_mes" id="DBP2TM_mes">
+                        <label for="EG2TM_weeks">GA second TM (weeks):</label>
+                        <input type="text" name="EG2TM_weeks" id="EG2TM_weeks">
+                        <label for="EG2TM_days">GA second TM (days):</label>
+                        <input type="text" name="EG2TM_days" id="EG2TM_days">
+                        <input type="button" onclick="PPI()" value="Calculate">
+                        <label for="percentile_GCIITM">Percentile:</label>
+                        <input type="text" name="percentile_GCIITM" id="percentile_GCIITM">
+                    </div>
+                    <div data-role="collapsible">
+                        <h1>Unique percentile III TM</h1>
+                        <label for="peso_PFIIITM">EFW:</label>
+                        <input type="text" name="peso_PFIIITM" id="peso_PFIIITM">
+                        <label for="EG_PFIIITM_weeks">GA (weeks):</label>
+                        <input type="text" name="EG_PFIIITM_weeks" id="EG_PFIIITM_weeks">
+                        <label for="EG_PFIIITM_days">GA (days):</label>
+                        <input type="text" name="EG_PFIIITM_days" id="EG_PFIIITM_days">
+                        <fieldset data-role="controlgroup" name="sexoPFIIITM" id="sexoPFIIITM">
+                            <legend>Gender:</legend>
+                            <input type="radio" name="opcion_sexo_PFIIITM" id="opcion_1_sexo_PFIIITM" value="choice-1" checked="checked" />
+                            <label for="opcion_1_sexo_PFIIITM">Female</label>
+                            <input type="radio" name="opcion_sexo_PFIIITM" id="opcion_2_sexo_PFIIITM" value="choice-2" />
+                            <label for="opcion_2_sexo_PFIIITM">Male</label>
+                        </fieldset>
+                        <input type="button" onclick="PPI_II()" value="Calculate">
+                        <label for="percentile_UniqueIIITM">Percentile:</label>
+                        <input type="text" name="percentile_UniqueIIITM" id="percentile_UniqueIIITM">
+                    </div>
+                    <div data-role="collapsible">
+                        <h1>Multiple percentile III TM </h1>
+                        <label for="EG_PMIIITM_weeks">GA (weeks):</label>
+                        <input type="text" name="EG_PMIIITM_weeks" id="EG_PMIIITM_weeks">
+                        <label for="EG_PMIIITM_days">GA (days):</label>
+                        <input type="text" name="EG_PMIIITM_days" id="EG_PMIIITM_days">
+                        <fieldset data-role="controlgroup" name="sexoPMIIITM_A" id="sexoPMIIITM_A">
+                            <legend>Gender larger twin:</legend>
+                            <input type="radio" name="opcion_sexo_PMIIITM" id="opcion_sexo_firstfemaletwin_PMIIITM" value="first_female" checked="checked" />
+                            <label for="opcion_sexo_firstfemaletwin_PMIIITM">Female</label>
+                            <input type="radio" name="opcion_sexo_PMIIITM" id="opcion_sexo_firstmaletwin_PMIIITM" value="first_male" />
+                            <label for="opcion_sexo_firstmaletwin_PMIIITM">Male</label>
+                        </fieldset>
+                        <label for="pesoGemeloA_PMIIITM">EFW larger twin:</label>
+                        <input type="text" name="pesoGemeloA_PMIIITM" id="pesoGemeloA_PMIIITM">
+                        <fieldset data-role="controlgroup" name="sexoPMIIITM_B" id="sexoPMIIITM_B">
+                            <legend>Gender smaller twin:</legend>
+                            <input type="radio" name="opcion_sexo2_PMIIITM" id="opcion_sexo_secondfemaletwin_PMIIITM" value="second_female" checked="checked" />
+                            <label for="opcion_sexo_secondfemaletwin_PMIIITM">Female</label>
+                            <input type="radio" name="opcion_sexo2_PMIIITM" id="opcion_sexo_secondmaletwin_PMIIITM" value="second_male" />
+                            <label for="opcion_sexo_secondmaletwin_PMIIITM">Male</label>
+                        </fieldset>
+                        <label for="pesoGemeloB_PMIIITM">EFW smaller twin:</label>
+                        <input type="text" name="pesoGemeloB_PMIIITM" id="pesoGemeloB_PMIIITM">
+                        <input type="button" onclick="gestacional_percentil_multiple_III_TM()" value="Calculate">
+                        <label for="percentilGemeloA_PMIIITM">Percentile twin A:</label>
+                        <input type="text" name="percentilGemeloA_PMIIITM" id="percentilGemeloA_PMIIITM">
+                        <label for="percentilGemeloB_PMIIITM">Percentile twin B:</label>
+                        <input type="text" name="percentilGemeloB_PMIIITM" id="percentilGemeloB_PMIIITM">
+                        <label for="percentilDiscordancia_PMIIITM">% Discordance [(larger-smaller)/larger]:</label>
+                        <input type="text" name="percentilDiscordancia_PMIIITM" id="percentilDiscordancia_PMIIITM">
+                    </div>
+                </div>
+                <div id="preeclampsiaContent">
+                    <div>
+                        <h1>Preeclampsia 1T</h1>
+                        <h2>Epidemiologic data</h2>
+                        <div data-role="fieldcontain">
+                            <label for="select_paridad" class="select">Parity:</label>
+                            <select name="select_paridad" id="select_paridad">
+                                <option value="0">Nulipara</option>
+                                <option value="1">Multipara</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="select_PEprevia" class="select">Previous PE:</label>
+                            <select name="select_PEprevia" id="select_PEprevia">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="select_hipertension" class="select">Hypertension:</label>
+                            <select name="select_hipertension" id="select_hipertension">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="select_enf_renal" class="select">Renal disease:</label>
+                            <select name="select_enf_renal" id="select_enf_renal">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="select_coagulopatia" class="select">Coagulopathy:</label>
+                            <select name="select_coagulopatia" id="select_coagulopatia">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="select_diabetes" class="select">Diabetes:</label>
+                            <select name="select_diabetes" id="select_diabetes">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div data-role="fieldcontain">
+                            <label for="select_etnia" class="select">Ethnic group:</label>
+                            <select name="select_etnia" id="select_etnia">
+                                <option value="0">European</option>
+                                <option value="0">Maghreb</option>
+                                <option value="1">South american</option>
+                                <option value="0">Asia</option>
+                                <option value="0">Other</option>
+                            </select>
+                        </div>
+                        <h2>Biometric data </h2>
+                        <label for="RP_EDAD">Age (years):</label>
+                        <input type="text" name="RP_EDAD" id="RP_EDAD">
+                        <label for="RP_Altura">Height (cm):</label>
+                        <input type="text" name="RP_Altura" id="RP_Altura">
+                        <label for="RP_Peso">Weight (kg):</label>
+                        <input type="text" name="RP_Peso" id="RP_Peso">
+                        <h2>First Trimester Data</h2>
+                        <label for="RP_CRL">CRL(mm):</label>
+                        <input type="text" name="RP_CRL" id="RP_CRL">
+                        <label for="RP_PAPP_A">PAPP-A(MoMs):</label>
+                        <input type="text" name="RP_PAPP_A" id="RP_PAPP_A">
+                        <label for="RP_TA_SIST">Systolic BP (mmHg):</label>
+                        <input type="text" name="RP_TA_SIST" id="RP_TA_SIST">
+                        <label for="RP_TA_DIAST">Diastolic BP (mmHg):</label>
+                        <input type="text" name="RP_TA_DIAST" id="RP_TA_DIAST">
+                        <label for="RP_IP_mAUt">IPmAUt:</label>
+                        <input type="text" name="RP_IP_mAUt" id="RP_IP_mAUt">
+                        <input type="button" onclick="gestacional_riesgo_preeclampsia_I_TM()" value="Calculate">
+                        <label for="RP_riesgo_PE_Precoz">Risk early PE:</label>
+                        <input type="text" name="RP_riesgo_PE_Precoz" id="RP_riesgo_PE_Precoz">
+                    </div>
+                </div>
+                <div id="herniaContent">
+                    <h2>Congenital Diaphragmatic Hernia Calculator</h2>
+                    <div data-role="collapsible">
+                        <h1>Left side Hernia</h1>
+                        <div data-role="collapsible">
+                            <h2>o/e LHR (%)</h2>
+                            <div data-role="collapsible">
+                                <h3>Longest diameter method</h3>
+                                <p>Right Lung to Head Ratio</p>
+                                <div class="ui-field-contain">
+                                    <label for="EGHILDM_weeks">Gestational age (weeks):</label>
+                                    <input type="text" name="EGHILDM_weeks" id="EGHILDM_weeks">
+                                    <label for="EGHILDM_days">Gestational age (days):</label>
+                                    <input type="text" name="EGHILDM_days" id="EGHILDM_days">
+                                    <label for="HILDMlongitudinalDiameterA">Longitudinal diameter A (mm):</label>
+                                    <input type="text" name="HILDMlongitudinalDiameterA" id="HILDMlongitudinalDiameterA">
+                                    <label for="HILDMtransversalDiameter">Transversal diameter B (mm):</label>
+                                    <input type="text" name="HILDMtransversalDiameter" id="HILDMtransversalDiameter">
+                                    <label for="HILDMheadCircumference">Head circumference(mm):</label>
+                                    <input type="text" name="HILDMheadCircumference" id="HILDMheadCircumference">
+                                    <input type="button" onclick="hernia_izquierda_oeLHR_longest_diameter_method()" value="Calculate">
+                                    <label for="HILDMLHR">LHR:</label>
+                                    <input type="text" name="HILDMLHR" id="HILDMLHR">
+                                    <label for="HILDMoeLHR">o/e LHR (%):</label>
+                                    <input type="text" name="HILDMoeLHR" id="HILDMoeLHR">
+                                </div>
+                            </div>
+                            <div data-role="collapsible">
+                                <h3>Tracing method</h3>
+                                <p>Right Lung to Head Ratio</p>
+                                <div class="ui-field-contain">
+                                    <label for="EGHITM_weeks">Gestational age (weeks):</label>
+                                    <input type="text" name="EGHITM_weeks" id="EGHITM_weeks">
+                                    <label for="EGHITM_days">Gestational age (days):</label>
+                                    <input type="text" name="EGHITM_days" id="EGHITM_days">
+                                    <label for="HITM_lungArea">Lung area (mm<sup>2</sup>):</label>
+                                    <input type="text" name="HITM_lungArea" id="HITM_lungArea">
+                                    <label for="HITM_headCircumference">Head circumference(mm):</label>
+                                    <input type="text" name="HITM_headCircumference" id="HITM_headCircumference">
+                                    <input type="button" onclick="hernia_izquierda_oeLHR_tracing_method()" value="Calculate">
+                                    <label for="HITMLHR">LHR:</label>
+                                    <input type="text" name="HITMLHR" id="HITMLHR">
+                                    <label for="HITMoeLHR">o/e LHR (%):</label>
+                                    <input type="text" name="HITMoeLHR" id="HITMoeLHR">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-role="collapsible">
+                            <h2>Prediction of survival</h2>
+                            <h3>Prediction of survival in left CDH</h3>
+                            <div class="ui-field-contain">
+                                <label for="lungToHeadRatio_HIPSLALH">Lung to head ratio o/e (%):</label>
+                                <input type="text" name="lungToHeadRatio_HIPSLALH" id="lungToHeadRatio_HIPSLALH">
+                                <label for="liverUp_HIPSLALH">Liver up (1=Yes 0=No):</label>
+                                <input type="text" name="liverUp_HIPSLALH" id="liverUp_HIPSLALH">
+                                <input type="button" onclick="hernia_izquierda_LHR_and_liver_herniation()" value="Calculate">
+                                <label for="expectancy_HIPSLALH">Expected survival %:</label>
+                                <input type="text" name="expectancy_HIPSLALH" id="expectancy_HIPSLALH">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="prueba" name="prueba" data-role="collapsible">
+                        <h1>Right side hernia</h1>
+                        <div data-role="collapsible">
+                            <h2>o/e LHR (%)</h2>
+                            <div data-role="collapsible">
+                                <h3>Longest diameter method</h3>
+                                <p>Left Lung to Head Ratio</p>
+                                <div class="ui-field-contain">
+                                    <label for="EGHDLDM_weeks">Gestational age (weeks):</label>
+                                    <input type="text" name="EGHDLDM_weeks" id="EGHDLDM_weeks">
+                                    <label for="EGHDLDM_days">Gestational age (days):</label>
+                                    <input type="text" name="EGHDLDM_days" id="EGHDLDM_days">
+                                    <label for="HDLDMlongitudinalDiameterA">Longitudinal diameter A (mm):</label>
+                                    <input type="text" name="HDLDMlongitudinalDiameterA" id="HDLDMlongitudinalDiameterA">
+                                    <label for="HDLDMtransversalDiameter">Transversal diameter B (mm):</label>
+                                    <input type="text" name="HDLDMtransversalDiameter" id="HDLDMtransversalDiameter">
+                                    <label for="HDLDMheadCircumference">Head circumference(mm):</label>
+                                    <input type="text" name="HDLDMheadCircumference" id="HDLDMheadCircumference">
+                                    <input type="button" onclick="hernia_derecha_oeLHR_longest_diameter_method()" value="Calculate">
+                                    <label for="HDLDMLHR">LHR:</label>
+                                    <input type="text" name="HDLDMLHR" id="HDLDMLHR">
+                                    <label for="HDLDMoeLHR">o/e LHR (%):</label>
+                                    <input type="text" name="HDLDMoeLHR" id="HDLDMoeLHR">
+                                </div>
+                            </div>
+                            <div data-role="collapsible">
+                                <h3>Tracing method</h3>
+                                <p>Left Lung to Head Ratio</p>
+                                <div class="ui-field-contain">
+                                    <label for="EGHDTM_weeks">Gestational age (weeks):</label>
+                                    <input type="text" name="EGHDTM_weeks" id="EGHDTM_weeks">
+                                    <label for="EGHDTM_days">Gestational age (days):</label>
+                                    <input type="text" name="EGHDTM_days" id="EGHDTM_days">
+                                    <label for="HDTM_lungArea">Lung area (mm<sup>2</sup>):</label>
+                                    <input type="text" name="HDTM_lungArea" id="HDTM_lungArea">
+                                    <label for="HDTM_headCircumference">Head circumference(mm):</label>
+                                    <input type="text" name="HDTM_headCircumference" id="HDTM_headCircumference">
+                                    <input type="button" onclick="hernia_derecha_oeLHR_tracing_method()" value="Calculate">
+                                    <label for="HDTMLHR">LHR:</label>
+                                    <input type="text" name="HDTMLHR" id="HDTMLHR">
+                                    <label for="HDTMoeLHR">o/e LHR (%):</label>
+                                    <input type="text" name="HDTMoeLHR" id="HDTMoeLHR">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-role="collapsible">
+                            <h2>Prediction of survival</h2>
+                            <h3>Prediction of survival in right CDH</h3>
+                            <div class="ui-field-contain">
+                                <label for="predictionOfSurvival_HD">Lung to head ratio o/e (%):</label>
+                                <input type="text" name="predictionOfSurvival_HD" id="predictionOfSurvival_HD">
+                                <input type="button" onclick="hernia_derecha_prediction_of_survival()" value="Calculate">
+                                <label for="expectancy_HD">Expected survival %:</label>
+                                <input type="text" name="expectancy_HD" id="expectancy_HD">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="anemiaContent">
+                    <h3>Anemia</h3>
+                    <div data-role="collapsible">
+                        <h3>Cerebral Doppler</h3>
+                        <div class="ui-field-contain">
+                            <label for="EGADC_weeks">GA (weeks): </label>
+                            <input type="text" name="EGADC_weeks" id="EGADC_weeks">
+                            <label for="EGADC_days">GA (days): </label>
+                            <input type="text" name="EGADC_days" id="EGADC_days">
+                            <label for="ACMVSM">MCA PSV: </label>
+                            <input type="text" name="ACMVSM" id="ACMVSM">
+                            <input type="button" onclick="anemia_doppler_cerebral()" value="Calculate">
+                            <label for="VSMEsperada">Expected PSV: </label>
+                            <input type="text" name="VSMEsperada" id="VSMEsperada">
+                            <label for="MoMADC">MoM: </label>
+                            <input type="text" name="MoMADC" id="MoMADC">
+                            <label for="gradoADC">Anemia level: </label>
+                            <input type="text" name="gradoADC" id="gradoADC">
+                        </div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h3>CALCULATE VOLUME TO TRANSFUSE</h3>
+                        <div class="ui-field-contain">
+                            <label for="EGAVT_weeks">GA (weeks): </label>
+                            <input type="text" name="EGAVT_weeks" id="EGAVT_weeks">
+                            <label for="EGAVT_days">GA (days): </label>
+                            <input type="text" name="EGAVT_days" id="EGAVT_days">
+                            <label for="hematocritoDonanteAVT">Donator Hematocrite%: </label>
+                            <input type="text" name="hematocritoDonanteAVT" id="hematocritoDonanteAVT">
+                            <label for="hematrocritoDeseadoAVT">Desired Hematocrite%: </label>
+                            <input type="text" name="hematrocritoDeseadoAVT" id="hematrocritoDeseadoAVT">
+                            <label for="hematrocritoObservadoAVT">Observed Hematocrite%: </label>
+                            <input type="text" name="hematrocritoObservadoAVT" id="hematrocritoObservadoAVT">
+                            <input type="button" onclick="anemia_volumen_a_transfundir()" value="Calculate">
+                            <label for="volumenAVT">Volume to transfuse (ml): </label>
+                            <input type="text" name="volumenAVT" id="volumenAVT">
+                        </div>
+                    </div>
+                </div>
+                <div id="dopplerContent">
+                    <h3>Doppler</h3>
+                    <div data-role="collapsible">
+                        <h3>Umbilical artery</h3>
+                        <div class="ui-field-contain">
+                            <label for="EGDAU_weeks">GA (weeks): </label>
+                            <input type="text" name="EGDAU_weeks" id="EGDAU_weeks">
+                            <label for="EGDAU_days">GA (days): </label>
+                            <input type="text" name="EGDAU_days" id="EGDAU_days">
+                            <label for="indicePulsatilidadDAU">Pulsatility index: </label>
+                            <input type="text" name="indicePulsatilidadDAU" id="indicePulsatilidadDAU">
+                            <input type="button" onclick="doppler_arteria_umbilical()" value="Calculate">
+                            <label for="percentilDAU">Percentile: </label>
+                            <input type="text" name="percentilDAU" id="percentilDAU">
+                            <label for="resultadoDAU">Result: </label>
+                            <input type="text" name="resultadoDAU" id="resultadoDAU">
+                        </div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h3>Middle cerebral artery</h3>
+                        <div class="ui-field-contain">
+                            <label for="EGDACM_weeks">GA (weeks): </label>
+                            <input type="text" name="EGDACM_weeks" id="EGDACM_weeks">
+                            <label for="EGDACM_days">GA (days): </label>
+                            <input type="text" name="EGDACM_days" id="EGDACM_days">
+                            <label for="indicePulsatilidadDACM">Pulsatility index: </label>
+                            <input type="text" name="indicePulsatilidadDACM" id="indicePulsatilidadDACM">
+                            <input type="button" onclick="doppler_arteria_cerebral_media()" value="Calculate">
+                            <label for="percentilDACM">Percentile: </label>
+                            <input type="text" name="percentilDACM" id="percentilDACM">
+                            <label for="resultadoDACM">Result: </label>
+                            <input type="text" name="resultadoDACM" id="resultadoDACM">
+                        </div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h3>Cerebroplacental ratio</h3>
+                        <div class="ui-field-contain">
+                            <label for="EGDRCP_weeks">GA (weeks): </label>
+                            <input type="text" name="EGDRCP_weeks" id="EGDRCP_weeks">
+                            <label for="EGDRCP_days">GA (days): </label>
+                            <input type="text" name="EGDRCP_days" id="EGDRCP_days">
+                            <label for="indicePulsatilidadACMDRCP">Pulsatility index cerebral media artery: </label>
+                            <input type="text" name="indicePulsatilidadACMDRCP" id="indicePulsatilidadACMDRCP">
+                            <label for="indicePulsatilidadAUDRCP">Pulsatility index umbilical artery: </label>
+                            <input type="text" name="indicePulsatilidadAUDRCP" id="indicePulsatilidadAUDRCP">
+                            <input type="button" onclick="doppler_ratio_cerebroplacentario()" value="Calculate">
+                            <label for="ratioDRCP">Cerebroplacental ratio: </label>
+                            <input type="text" name="ratioDRCP" id="ratioDRCP">
+                            <label for="percentilDRCP">Percentile: </label>
+                            <input type="text" name="percentilDRCP" id="percentilDRCP">
+                            <label for="resultadoDRCP">Result: </label>
+                            <input type="text" name="resultadoDRCP" id="resultadoDRCP">
+                        </div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h3>Uterine arteries</h3>
+                        <div class="ui-field-contain">
+                            <label for="EGDAUterinas_weeks">GA (weeks): </label>
+                            <input type="text" name="EGDAUterinas_weeks" id="EGDAUterinas_weeks">
+                            <label for="EGDAUterinas_days">GA (days): </label>
+                            <input type="text" name="EGDAUterinas_days" id="EGDAUterinas_days">
+                            <label for="indicePulsatilidadUDDAUterinas">Pulsatility index right uterine artery: </label>
+                            <input type="text" name="indicePulsatilidadUDDAUterinas" id="indicePulsatilidadUDDAUterinas">
+                            <label for="indicePulsatilidadUIDAUterinas">Pulsatility index left uterine artery:: </label>
+                            <input type="text" name="indicePulsatilidadUIDAUterinas" id="indicePulsatilidadUIDAUterinas">
+                            <input type="button" onclick="doppler_arterias_uterinas()" value="Calculate">
+                            <label for="indicePulsatilidadMedioDAUterinas">Average pulsatility index: </label>
+                            <input type="text" name="indicePulsatilidadMedioDAUterinas" id="indicePulsatilidadMedioDAUterinas">
+                            <label for="percentilDAUterinas">Percentile: </label>
+                            <input type="text" name="percentilDAUterinas" id="percentilDAUterinas">
+                            <label for="resultadoDAUterinas">Result: </label>
+                            <input type="text" name="resultadoDAUterinas" id="resultadoDAUterinas">
+                        </div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h3>Ductus venosus</h3>
+                        <div class="ui-field-contain">
+                            <label for="EGDDV_weeks">GA (weeks): </label>
+                            <input type="text" name="EGDDV_weeks" id="EGDDV_weeks">
+                            <label for="EGDDV_days">GA (days): </label>
+                            <input type="text" name="EGDDV_days" id="EGDDV_days">
+                            <label for="indicePulsatilidadDDV">Pulsatility index: </label>
+                            <input type="text" name="indicePulsatilidadDDV" id="indicePulsatilidadDDV">
+                            <input type="button" onclick="doppler_ductus_venoso()" value="Calculate">
+                            <label for="percentilDDV">Percentile: </label>
+                            <input type="text" name="percentilDDV" id="percentilDDV">
+                            <label for="resultadoDDV">Result: </label>
+                            <input type="text" name="resultadoDDV" id="resultadoDDV">
+                        </div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h3>Aortic isthmus</h3>
+                        <div class="ui-field-contain">
+                            <label for="EGDIA_weeks">GA (weeks): </label>
+                            <input type="text" name="EGDIA_weeks" id="EGDIA_weeks">
+                            <label for="EGDIA_days">GA (days): </label>
+                            <input type="text" name="EGDIA_days" id="EGDIA_days">
+                            <label for="indicePulsatilidadDIA">Pulsatility index: </label>
+                            <input type="text" name="indicePulsatilidadDIA" id="indicePulsatilidadDIA">
+                            <input type="button" onclick="doppler_istmo_aortico()" value="Calculate">
+                            <label for="percentilDIA">Percentile: </label>
+                            <input type="text" name="percentilDIA" id="percentilDIA">
+                            <label for="resultadoDIA">Result: </label>
+                            <input type="text" name="resultadoDIA" id="resultadoDIA">
+                        </div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h3>TEI index</h3>
+                        <div class="ui-field-contain">
+                            <label for="EGDTEI_weeks">GA (weeks): </label>
+                            <input type="text" name="EGDTEI_weeks" id="EGDTEI_weeks">
+                            <label for="EGDTEI_days">GA (days): </label>
+                            <input type="text" name="EGDTEI_days" id="EGDTEI_days">
+                            <label for="TCI_DTEI">Isovolumetric contraction time: </label>
+                            <input type="text" name="TCI_DTEI" id="TCI_DTEI">
+                            <label for="TRI_DTEI">Isovolumetric relaxation time: </label>
+                            <input type="text" name="TRI_DTEI" id="TRI_DTEI">
+                            <label for="ET_DTEI">Ejection time: </label>
+                            <input type="text" name="ET_DTEI" id="ET_DTEI">
+                            <input type="button" onclick="doppler_indice_TEI()" value="Calculate">
+                            <label for="indiceTEI_DTEI">TEI index: </label>
+                            <input type="text" name="indiceTEI_DTEI" id="indiceTEI_DTEI">
+                            <label for="percentilDTEI">Percentile: </label>
+                            <input type="text" name="percentilDTEI" id="percentilDTEI">
+                            <label for="resultadoDTEI">Result: </label>
+                            <input type="text" name="resultadoDTEI" id="resultadoDTEI">
+                        </div>
+                    </div>
+                </div>
+                <div id="fgrvssgaContent">
+                    <input type="button" onclick="clearValues()" value="Clear values">
+                    <div class="ui-field-contain">
+                        <div data-role="fieldcontain">
+                            <fieldset data-role="controlgroup">
+                                <input type="checkbox" name="FGRvsSGA_checkbox_GA" id="FGRvsSGA_checkbox_GA" checked="false" class="custom" />
+                                <label for="FGRvsSGA_checkbox_GA" id="FGRvsSGA_checkbox_GA_label">Gestational Age</label>
+                            </fieldset>
+                        </div>
+                        <input type="text" name="FGRvsSGA_GA_weeks" id="FGRvsSGA_GA_weeks" placeholder="Gestational Age (weeks):">
+                        <input type="text" name="FGRvsSGA_GA_days" id="FGRvsSGA_GA_days" placeholder="Gestational Age (days):">
+                        <div data-role="fieldcontain">
+                            <fieldset data-role="controlgroup">
+                                <input type="checkbox" name="FGRvsSGA_checkbox_LMP" id="FGRvsSGA_checkbox_LMP" checked="false" class="custom" />
+                                <label for="FGRvsSGA_checkbox_LMP" id="FGRvsSGA_checkbox_LMP_label">Last Menstrual period</label>
+                            </fieldset>
+                        </div>
+                        <input type="hidden">
+                        <input name="FGRvsSGA_LMP" id="FGRvsSGA_LMP" placeholder="LMP" type="text" readonly="readonly" />
+                        <br>
+                        <br>
+                        <p id="fetal_growth_LMP_text"></p>
+                        <fieldset class="ui-grid-a">
+                            <div class="ui-block-a">
+                                <h4>EFW (G):</h4>
+                                <input type="text" name="FGRvsSGA_EFW" id="FGRvsSGA_EFW">
+                            </div>
+                            <center>
+                                <br>
+                                <br>
+                                <div class="ui-block-b">
+                                    <p id="FGRvsSGA_EFW_percentage">Percentile: </p>
+                                </div>
+                            </center>
+                        </fieldset>
+                        <h4>Gender:</h4>
+                        <fieldset data-role="controlgroup" name="FGRvsSGA_gender" id="FGRvsSGA_gender">
+                            <input type="radio" name="opcion_FGRvsSGA_gender" id="opcion_1_sexo_FGRvsSGA" value="choice-1" checked="checked" />
+                            <label for="opcion_1_sexo_FGRvsSGA">Female</label>
+                            <input type="radio" name="opcion_FGRvsSGA_gender" id="opcion_2_sexo_FGRvsSGA" value="choice-2" />
+                            <label for="opcion_2_sexo_FGRvsSGA">Male</label>
+                        </fieldset>
+                        <input type="button" id="FGR_vs_SGA_FirstPanelButton" value="Calculate">
+                        <!-- Panel 2 -->
+                        <div id="FetalGrowth_panel2">
+
+                            <fieldset class="ui-grid-a">
+                                <div class="ui-block-a">
+                                    <label for="FGRvsSGA_UADopplerPI" style="display: inline; vertical-align: 1.2em;">UA Doppler PI: </label>
+                                    <input type="text" name="FGRvsSGA_UADopplerPI" id="FGRvsSGA_UADopplerPI">
+                                </div>
+                                <center>
+                                    <br>
+                                    <br>
+                                    <div class="ui-block-b">
+                                        <p id="FGRvsSGA_UADopplerPI_percentage">Percentile:</p>
+                                        <!--<div id="FGRvsSGA_UADopplerPI_percentage"><p>Percentile: </p></div>-->
+                                    </div>
+                                </center>
+                            </fieldset>
+                            <div data-role="fieldcontain">
+                                <h4>UA Diastolic flow</h4>
+                                <select name="select_diastolic_flow" id="select_diastolic_flow">
+                                    <option value="0">Present</option>
+                                    <option value="1">Absent</option>
+                                    <option value="2">Reverse</option>
+                                </select>
+                            </div>
+                            <fieldset class="ui-grid-a">
+                                <div class="ui-block-a">
+                                    <label for="FGRvsSGA_MCADopplerMCAPI" style="display: inline; vertical-align: 1.2em;">MCA Doppler PI: </label>
+                                    <input type="text" name="FGRvsSGA_MCADopplerMCAPI" id="FGRvsSGA_MCADopplerMCAPI">
+                                </div>
+                                <center>
+                                    <br>
+                                    <br>
+                                    <div class="ui-block-b">
+                                        <p id="FGRvsSGA_MCADopplerMCAPI_percentage">Percentile:</p>
+                                        <!--<div id="FGRvsSGA_MCADopplerMCAPI_percentage"><p>Percentile: </p></div>-->
+                                    </div>
+                                </center>
+                            </fieldset>
+                            <fieldset class="ui-grid-a">
+                                <div class="ui-block-a">
+                                    <label for="FGRvsSGA_UtARightDoppler" style="display: inline; vertical-align: 1.2em;">Ut.A Right Doppler: </label>
+                                    <input type="text" name="FGRvsSGA_UtARightDoppler" id="FGRvsSGA_UtARightDoppler">
+                                </div>
+                                <center>
+                                    <br>
+                                    <br>
+                                    <div class="ui-block-b">
+                                        <!--<div id="FGRvsSGA_UtARightDoppler_percentage"><p>Percentile: </p></div>-->
+                                    </div>
+                                </center>
+                            </fieldset>
+                            <fieldset class="ui-grid-a">
+                                <div class="ui-block-a">
+                                    <label for="FGRvsSGA_UtALeftDoppler" style="display: inline; vertical-align: 1.2em;">Ut.A Left Doppler: </label>
+                                    <input type="text" name="FGRvsSGA_UtALeftDoppler" id="FGRvsSGA_UtALeftDoppler">
+                                </div>
+                                <center>
+                                    <br>
+                                    <br>
+                                    <div class="ui-block-b">
+                                        <!--<div id="FGRvsSGA_UtALeftDoppler_percentage"><p>Percentile: </p></div>-->
+                                    </div>
+                                </center>
+                            </fieldset>
+                            <input type="button" id="FGR_vs_SGA_SecondPanelButton" value="Calculate">
+                        </div>
+                        <!-- End Panel 2  -->
+                        <!-- Panel 2.5 -->
+                        <div id="FetalGrowth_panel2_5">
+                            <fieldset class="ui-grid-a">
+                                <div class="ui-block-a">
+                                    <h4 id="Fetal_growth_CPR_percentile">CPR (Percentile:1)</h4>
+                                    <p id="FGRvsSGA_CPR"></p>
+                                </div>
+
+                                <div class="ui-block-b">
+                                    <h4><p id="fetalGrowth_meanUtA_percentile">Mean Ut. A (Percentile:64)</p></h4>
+                                    <!--<input type="text" name="FGRvsSGA_MeanUTA" id="FGRvsSGA_MeanUTA" readonly>-->
+                                    <p id="FGRvsSGA_MeanUTA"></p>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- End Panel 2.5 -->
+                        <!-- Panel 3 -->
+                        <div id="FetalGrowth_panel3">
+                            <div data-role="fieldcontain" style='display:none;'>
+                                <h4>Ao Isthmus Diastolic Flow:</h4>
+                                <select name="FGR_vs_SGA_select_diastolic_flow" id="FGR_vs_SGA_select_diastolic_flow">
+                                    <option value="0">Present</option>
+                                    <option value="2">Reverse</option>
+                                </select>
+                            </div>
+                            <fieldset class="ui-grid-a">
+                                <div class="ui-block-a" id="opt-box">
+                                    <label for="FGRvsSGA_DVPI" style="display: inline; vertical-align: 1.2em;">DV PI: </label>
+                                    <input type="text" name="FGRvsSGA_DVPI" id="FGRvsSGA_DVPI">
+                                </div>
+                                <center>
+                                    <div class="ui-block-b" id="opt-box1">
+                                        <p id="FGRvsSGA_DVPI_percentage">Percentile: </p>
+                                        <!--<div id="FGRvsSGA_DVPI_percentage"><p>Percentile: </p></div>-->
+                                    </div>
+                                </center>
+                            </fieldset>
+                            <div data-role="fieldcontain">
+                                <h4>D.V. Atrial Flow:</h4>
+                                <select name="FGR_vs_SGA_select_atrial_flow" id="FGR_vs_SGA_select_atrial_flow">
+                                    <option value="0">Present</option>
+                                    <option value="1">Absent</option>
+                                    <option value="2">Reverse</option>
+                                </select>
+                            </div>
+                            <input type="button" id="FGR_vs_SGA_ThirdPanelButton" value="Calculate">
+                        </div>
+                        <!-- End Panel 3 -->
+                        <!-- Panel 4 -->
+                        <div id="FetalGrowth_panel4">
+                            <h3 style="margin: 0 0;" id="FGR_Label">Fetal Growth restriction:</h3>
+                            <p id="fetalGrowthRestriction_fetalGrowth" style="color:red;font-size:30px;margin: 0 0;">Stage 2</p>
+                            <h3 style="margin: 0 0;" id="FGR_RM">Recommended management:</h3>
+                            <p id="recommendedManagement_fetalGrowth" style="color:red;font-size:30px;margin: 0 0;">Follow-up in 1 week</p>
+                        </div>
+                        <!-- End of panel 4 -->
+                    </div>
+                </div>
+                <div id="twinsContent" class="tleft">
+                    <div class="twinsRecom">
+                        <p class="bold center">Recommendations:</p>
+                        <ul>
+                            <li>Control every two weeks</li>
+                            <li>Amniotic fluid (maximum vertical pocket) + estimated fetal weight or abdominal circumference + peak systolic velocity middle cerebral artery</li>
+                        </ul>
+                    </div>
+                    <h2 class="center">DIAGNOSTIC ALGORITHM</h2>
+                    <input type="button" onclick="clearValues_twins()" value="Clear values">
+                    <br>
+                    <label for="lmpt">Confirmed LMP</label>
+                    <input name="lmpt" id="lmpt" placeholder="Last menstrual period" type="text">
+                    <label for="GA_twins">GA by LMP: <span id="GA_twins"></span></label>
+                    <br><br>
+                    <fieldset data-role="controlgroup" name="genderTwins" id="genderTwins">
+                        <legend>Twins gender</legend>
+                        <input type="radio" name="genderTwins-choice" id="genderTwins-choice-1" value="choice-1" checked="checked" />
+                        <label for="genderTwins-choice-1">Female</label>
+                        <input type="radio" name="genderTwins-choice" id="genderTwins-choice-2" value="choice-2" />
+                        <label for="genderTwins-choice-2">Male</label>
+                    </fieldset>
+                    <div class="col1">
+                        <h3 class="center">TWIN 1</h3>
+                        <label for="mvpa1">Maximum vertical pocket of Amniotic fluid (mm)</label>
+                        <input type="text" name="mvpa1" id="mvpa1" placeholder="(mm)">
+                        <div data-role="fieldcontain">
+                            <label for="select_blad1" class="select">Bladder</label><br />
+                            <select name="select_blad1" id="select_blad1">
+                                <option value="0">Normal or slightly small-large</option>
+                                <option value="1">Non-visible</option>
+                                <option value="2">Markedly small</option>
+                                <option value="3">Markedly large</option>
+                            </select>
+                        </div>
+                        <div class="efw">
+                            <label for="efw1">Estimated fetal weight (g)</label>
+                            <input type="text" name="efw1" id="efw1" placeholder="(g)">
+                        </div>
+                        <div class="ac">
+                            <label for="ac1">Abdominal Circumference (mm)</label>
+                            <input type="text" name="ac1" id="ac1" placeholder="(mm)">
+                        </div>
+                        <label for="psvm1">Peak systolic velocity middle cerebral artery (cm/s)</label>
+                        <input type="text" name="psvm1" id="psvm1" placeholder="(cm/s)">
+                    </div>
+                    <div class="col2">
+                        <h3 class="center">TWIN 2</h3>
+                        <label for="mvpa2">Maximum vertical pocket of Amniotic fluid (mm)</label>
+                        <input type="text" name="mvpa2" id="mvpa2" placeholder="(mm)">
+                        <div data-role="fieldcontain">
+                            <label for="select_blad2" class="select">Bladder</label><br />
+                            <select name="select_blad2" id="select_blad2">
+                                <option value="0">Normal or slightly small-large</option>
+                                <option value="1">Non-visible</option>
+                                <option value="2">Markedly small</option>
+                                <option value="3">Markedly large</option>
+                            </select>
+                        </div>
+                        <div class="efw">
+                            <label for="efw2">Estimated fetal weight (g)</label>
+                            <input type="text" name="efw2" id="efw2" placeholder="(g)">
+                        </div>
+                        <div class="ac">
+                            <label for="ac2">Abdominal Circumference (mm)</label>
+                            <input type="text" name="ac2" id="ac2" placeholder="(mm)">
+                        </div>
+                        <label for="psvm2">Peak systolic velocity middle cerebral artery (cm/s)</label>
+                        <input type="text" name="psvm2" id="psvm2" placeholder="(cm/s)">
+                    </div>
+                    <span class="clearer"></span>
+                    <span id="sm1"></span>
+                    <div class="btn marginb20">
+                        <input type="button" onclick="monochorionicTwins()" value="Calculate">
+                    </div>
+                    <div class="twinsRecom dataReview hide" id="notShown"><p></p></div>
+                    <h4 class="result hide" id="monoTwinsResult"></h4>
+                    <div class="hide" id="ttfs">
+                        <h4 id="toAppendFlagV1" class="result center"><span class="large">Twin-twin transfusion syndrome</span><span class="small hide">PSV-MCA values not entered, the risk for TAPS can not be assessed.</span></h4>
+                        <div class="twinsRecom dataReview hide"><p></p></div>
+                        <hr class="divider">
+                        <h2 class="center">STAGING</h2>
+                        <em>Quintero RA et al. J Perinatol. 1999 Dec;19 (8 Pt1): 550-5.</em>
+                        <hr>
+                        <div class="col1">
+                            <h3 class="center">TWIN 1 <span class="recNum1"></span></h3>
+                            <p>MVP-AF (mm): <span id="mvpa1TT"></span></p>
+                            <p>Bladder: <span id="blad1TT"></span></p>
+                            <br />
+                            <div data-role="fieldcontain" id="ductust1">
+                                <label for="select_ductust1" class="select">Ductus venous flow</label><br />
+                                <select name="select_ductust1" id="select_ductust1">
+                                    <option value="0">Present</option>
+                                    <option value="1">Absent</option>
+                                    <option value="2">Reverse</option>
+                                </select>
+                            </div>
+                            <div data-role="fieldcontain" id="umbil1">
+                                <label for="select_umbilicalt1" class="select">Umbilical artery flow</label><br />
+                                <select name="select_umbilicalt1" id="select_umbilicalt1">
+                                    <option value="0">Present</option>
+                                    <option value="1">Absent</option>
+                                    <option value="2">Reverse</option>
+                                </select>
+                            </div>
+                            <div data-role="fieldcontain">
+                                <label for="select_hyd1" class="select">Hydrops</label><br />
+                                <select name="select_hyd1" id="select_hyd1">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col2">
+                            <h3 class="center">TWIN 2 <span class="recNum2"></span></h3>
+                            <p>MVP-AF (mm): <span id="mvpa2TT"></span></p>
+                            <p>Bladder: <span id="blad2TT"></span></p>
+                            <br />
+                            <div data-role="fieldcontain" id="ductust2">
+                                <label for="select_ductust2" class="select">Ductus venous flow</label><br />
+                                <select name="select_ductust2" id="select_ductust2">
+                                    <option value="0">Present</option>
+                                    <option value="1">Absent</option>
+                                    <option value="2">Reverse</option>
+                                </select>
+                            </div>
+                            <div data-role="fieldcontain" id="umbil2">
+                                <label for="select_umbilicalt2" class="select">Umbilical artery flow</label><br />
+                                <select name="select_umbilicalt2" id="select_umbilicalt2">
+                                    <option value="0">Present</option>
+                                    <option value="1">Absent</option>
+                                    <option value="2">Reverse</option>
+                                </select>
+                            </div>
+                            <div data-role="fieldcontain">
+                                <label for="select_hyd2" class="select">Hydrops</label><br />
+                                <select name="select_hyd2" id="select_hyd2">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <span class="clearer"></span>
+                        <div class="btn marginb20">
+                            <input type="button" onclick="tttsTwins()" value="Calculate">
+                        </div>
+                        <h4 class="result hide bold center" id="tttsTwinsResult"></h4>
+                        <h4 class="result redOne hide" id="MCAwarning3"></h4>
+                        <br>
+                        <a id="showIt3"></a>
+                        <div id="showRisk" class="hide">
+                            <h2 class="center">RISK OF IUFD WITHIN ONE WEEK AFTER LASER</h2>
+                            <em>Eixarch E et al. Prenat Diagn. 2013 Nov;33(11):1033-8.</em>
+                            <hr>
+                            <br>
+                            <p>Gestational age: <span id="ga"></span></p>
+                            <p>Estimated fetal weight discordance (%): <span id="fwdr"></span></p>
+                            <div class="col1">
+                                <h3 class="center">TWIN 1 <span class="recNum1"></span></h3>
+
+                                <p id="recInfo"></p>
+                                <br />
+                            </div>
+                            <div class="col2">
+                                <h3 class="center">TWIN 2 <span class="recNum2"></span></h3>
+
+                                <p id="donInfo"></p>
+                                <br />
+                            </div>
+                            <span class="clearer"></span>
+
+                            <a id="showIt2"></a>
+                            <div class="btn marginb20">
+                                <input type="button" onclick="tttsTwins_second()" value="Calculate">
+                            </div>
+
+                            <div class="col1">
+                                <h4 class="result hide" id="tttsTwinsResult2"></h4>
+                            </div>
+                            <div class="col2">
+                                <h4 class="result hide" id="tttsTwinsResult3"></h4>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="siugr" class="hide">
+                        <h4 id="toAppendFlagV" class="result center"><span class="large">Selective IUGR</span><span class="small hide">PSV-MCA values not entered, the risk for TAPS can not be assessed.</span></h4>
+                        <div class="twinsRecom dataReview hide"><p></p></div>
+                        <hr class="divider">
+                        <h2 class="center">TYPE OF IUGR</h2>
+                        <fieldset data-role="controlgroup" name="dflowTwins" id="dflowTwins">
+                            <legend>Diastolic flow in Umbilical artery of small fetus:</legend>
+                            <br>
+                            <input type="radio" name="dflowTwins-choice" id="dflowTwins-choice-1" value="choice-1" />
+                            <label for="dflowTwins-choice-1">
+                                Normal
+                                <br><br>
+                                <img src="assets/type01.jpg" alt="type I" style="width: 376px;" />
+                            </label>
+                            <input type="radio" name="dflowTwins-choice" id="dflowTwins-choice-2" value="choice-2" />
+                            <label for="dflowTwins-choice-2">
+                                Absent / Reverse end-diastolic flow
+                                <br><br>
+                                <img src="assets/type02.jpg" alt="type II" />
+                            </label>
+                            <input type="radio" name="dflowTwins-choice" id="dflowTwins-choice-3" value="choice-3" />
+                            <label for="dflowTwins-choice-3">
+                                Intermittent absent / Reverse end-diastolic flow
+                                <br><br>
+                                <img src="assets/type03.jpg" alt="type III" style="width: 376px;" />
+                            </label>
+                        </fieldset>
+                        <h4 class="result hide" id="siugrResult"></h4>
+                        <h4 class="result redOne hide" id="MCAwarning2"></h4>
+                        <div class="twinsRecom hide" id="siugrResult_rec">
+                            <p class="bold center">Recomendations:</p>
+                        </div>
+                        <a id="showIt"></a>
+                        <div class="hide" id="showBlock">
+                            <h2 class="center">POOR PROGNOSIS CRITERIA</h2>
+                            <p>Gestational age: <span id="ga2"></span></p>
+                            <p>Estimated fetal weight discordance (%): <span id="fwdr2"></span></p>
+                            <br>
+                            <div data-role="fieldcontain">
+                                <label for="select_umbilical2" class="select">Umbilical artery flow</label><br />
+                                <select name="select_umbilical2" id="select_umbilical2">
+                                    <option value="0">Mostly absent</option>
+                                    <option value="1">Mostly reverse</option>
+                                </select>
+                            </div>
+                            <div data-role="fieldcontain">
+                                <label for="select_ductus2" class="select">Ductus venosus flow</label><br />
+                                <select name="select_ductus2" id="select_ductus2">
+                                    <option value="0">Present</option>
+                                    <option value="1">Absent</option>
+                                    <option value="2">Reverse</option>
+                                </select>
+                            </div>
+                            <br>
+                            <div class="btn marginb20">
+                                <input type="button" onclick="sIUGR()" value="Calculate"><br>
+                            </div>
+
+                            <div class="twinsRecom hide center" id="siugrResult2">
+                                <p class="bold center">Recomendations:</p>
+                            </div>
+
+                            <h4 class="result redOne hide" id="MCAwarning"></h4>
+                        </div>
+                    </div>
+                </div>
+                <div id="references" class="tleft">
+                    <div class="twinsRecom">
+                        <p><b>Dating</b></p>
+                        <p>1. Robinson HP. A critical evaluation of sonar &lsquo;crown-rump length&rsquo; measurements. BJOG 1975;82:702-710. Revised BUMS sept 2008.</p>
+                        <p>2. Mul T. A comparative analysis of second-trimester ultrasound dating formulas in pregnancies conceived with artificial reproductive techniques. UOG 1996; 8:397-402.</p>
+                        <p>3. Mongelli M. Third trimester ultrasound dating algorithms derived from pregnancies conceived with artificial reproductive techniques. UOG 2005; 26:129-131.</p>
+                        <p><b>Fetal Growth</b></p>
+                        <p>1. Hadlock FP. Estimation of fetal weight with the use of head, body and femur measurements a prospective study. Am J Obstet Gynecol 1985;151(3):333.</p>
+                        <p>2. Hadlock FP. Sonographic estimation of fetal weight. The value of femur length in addition to head and abdomen measurements. Radiology, 1984 Feb; 150(2):535.</p>
+                        <p><b>Growth centile in II TM</b></p>
+                        <p>1. Pedersen N, Figueras F, Tabor A. Obstetrics and Gynecology 2008; 112(4):765-71.</p>
+                        <p><b>Unique percentile in III TM</b></p>
+                        <p>1. Figueras F. Customized birthweight for a Spanish Population. EJOGRM 2008; 136(1):20-4.</p>
+                        <p><b>Multiple percentile in III TM</b></p>
+                        <p>1. Kuno A. Comparision of fetal growth in singleton, twin and triplet pregnancies. Hum Reprod 1999.</p>
+                        <p>2. Corbes de refer&egravencia de pes, per&iacutemetro craneal i longitud en n&egraveixer de nounats d'embarassos &uacutenics, bessons i trig&egravemins a Catalunya. Departament de Salut. Generalitat de Catalunya 2000.</p>
+                        <p><b>Congenital Diaphragmatic hernia</b></p>
+                        <p>1. Jani J, UOG 2007; 30:67-71.</p>
+                        <p>2. Dekoninck P, BJOG 2015; 122:940-946.</p>
+                        <p><b>Normal Doppler Values</b></p>
+                        <p>1. Arduini D J Perinat Med 1990; 18:165.</p>
+                        <p>2. Baschat AA UOG 2003; 21:124.</p>
+                        <p>3. Mari G N Engl J Med 2000; 342:9.</p>
+                        <p>4. Hecher K UOG 1994; 4:381.</p>
+                        <p>5. Rizzo G UOG 1996; 7:401.</p>
+                        <p><b>Biometr&iacuteas &oacuteseas</b></p>
+                        <p>CC: Snijders RL, UOG 1994.</p>
+                        <p>Extremidades: Chitty, LS BJOG 2002.</p>
+                    </div>
+                </div>
+            </div>
+        </center>
+    </div>
+    <script type="text/javascript" src="assets/formatgui.js"></script>
+</body>
+</html>
