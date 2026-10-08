@@ -1,1 +1,1 @@
-{"name":"Calculadora Fetal","short_name":"Calc Fetal","start_url":"./","scope":"./","display":"standalone","background_color":"#f9f9f9","theme_color":"#f9f9f9","icons":[{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}]}
+{"name":"Calculadora Fetal","short_name":"Calc Fetal","start_url":"./index.html","scope":"./","display":"standalone","background_color":"#f9f9f9","theme_color":"#f9f9f9","icons":[{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}]}
